@@ -1,0 +1,51 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik
+  namespace: argocd
+spec:
+  destination:
+    name: ''
+    namespace: 'traefik'
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: ''
+    repoURL: 'https://helm.traefik.io/traefik'
+    targetRevision: 25.0.0
+    chart: traefik
+    helm:
+      values: |-
+        additionalArguments:
+        deployemnt:
+          replicas: 1
+        resources:
+          requests:
+            cpu: 100m
+            memory: 50Mi
+          limits:
+            memory: 150Mi
+        logs:
+          general:
+            level: WARN
+        ports:
+          web:
+            redirectTo: websecure
+          websecure:
+            tls:
+              enabled: true
+        ingressRoute:
+          dashboard:
+            enabled: false
+        ingressClass:
+          enabled: true
+          isDefaultClass: true
+        service:
+          type: LoadBalancer
+  project: default
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
