@@ -1,0 +1,70 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+spec:
+  destination:
+    namespace: cert-manager
+    server: https://kubernetes.default.svc
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  source:
+    chart: cert-manager
+    repoURL: https://charts.jetstack.io
+    targetRevision: v1.13.1
+    helm:
+      parameters:
+        - name: installCRDs
+          value: "true"
+  ignoreDifferences:
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: certificaterequests.cert-manager.io
+      jsonPointers:
+        - /status
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: certificates.cert-manager.io
+      jsonPointers:
+        - /status
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: challenges.cert-manager.io
+      jsonPointers:
+        - /status
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: challenges.acme.cert-manager.io
+      jsonPointers:
+        - /status
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: clusterissuers.cert-manager.io
+      jsonPointers:
+        - /status
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: issuers.cert-manager.io
+      jsonPointers:
+        - /status
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: orders.acme.cert-manager.io
+      jsonPointers:
+        - /status
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      name: aks-infra-cert-manager-webhook
+      jsonPointers:
+        - /webhooks/0/namespaceSelector/matchExpressions/2
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      name: cert-manager-webhook
+      jqPathExpressions:
+        - .webhooks[].namespaceSelector.matchExpressions[] | select(.key == "control-plane")
+        - .webhooks[].namespaceSelector.matchExpressions[] | select(.key == "kubernetes.azure.com/managedby")
