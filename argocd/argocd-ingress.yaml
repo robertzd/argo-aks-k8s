@@ -7,7 +7,7 @@ metadata:
 spec:
   secretName: argocd-azaks-slv52-net
   issuerRef:
-    name: acme-issuer-tk-azuredns-letsencrypt
+    name: acme-issuer
     kind: ClusterIssuer
   dnsNames:
   - 'argocd.azaks.slv52.net'
