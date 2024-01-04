@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: falco
+  namespace: argocd
+spec:
+  destination:
+    name: ""
+    namespace: falco
+    server: "https://kubernetes.default.svc"
+  source:
+    repoURL: 'https://falcosecurity.github.io/charts'
+    targetRevision: 3.8.4
+    chart: falco
+    helm:
+      values: |-
+        driver:
+          kind: ebpf
+        tty: true
+        falco:
+          http_output:
+            enabled: true
+            url: 'http://falco-falcosidekick:2801'
+          json_output: true
+        falcosidekick:
+          enabled: true
+          webui:
+            enabled: true
+          fullfqdn: true
+          listenPort: '2802'
+project: default
+syncPolicy:
+  syncOptions:
+    - CreateNamespace=true
+  automated:
+    prune: true
+    selfHeal: true
