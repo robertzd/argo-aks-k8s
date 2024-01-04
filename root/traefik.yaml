@@ -43,6 +43,10 @@ spec:
           isDefaultClass: true
         service:
           type: LoadBalancer
+        providers:
+          kubernetesIngress:
+            publishedService:
+              enabled: true           
   project: default
   syncPolicy:
     syncOptions:
