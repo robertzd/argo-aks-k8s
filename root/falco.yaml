@@ -28,10 +28,10 @@ spec:
             enabled: true
           fullfqdn: true
           listenPort: '2802'
-project: default
-syncPolicy:
-  syncOptions:
-    - CreateNamespace=true
-  automated:
-    prune: true
-    selfHeal: true
+  project: default
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
