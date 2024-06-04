@@ -1,0 +1,20 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-trivy-operator
+  namespace: argocd
+spec:
+  destination:
+    name: ""
+    namespace: trivy
+    server: "https://kubernetes.default.svc"
+  source:
+    path: trivy-operator/
+    repoURL: "https://github.com/robertzd/argo-aks-k8s.git"
+  sources: []
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
