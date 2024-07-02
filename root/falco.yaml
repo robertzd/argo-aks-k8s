@@ -10,7 +10,7 @@ spec:
     server: "https://kubernetes.default.svc"
   source:
     repoURL: 'https://falcosecurity.github.io/charts'
-    targetRevision: 4.4.0
+    targetRevision: 4.5.3
     chart: falco
     helm:
       values: |-
